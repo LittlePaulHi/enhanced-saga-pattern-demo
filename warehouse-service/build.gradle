@@ -24,6 +24,10 @@ dependencies {
     implementation "io.github.microutils:kotlin-logging:2.0.4"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.assertj:assertj-core:3.19.0"
+    testImplementation "org.testcontainers:testcontainers:1.15.2"
+    testImplementation "org.testcontainers:junit-jupiter:1.15.2"
+    testImplementation "org.testcontainers:postgresql:1.15.2"
 }
 
 test {
