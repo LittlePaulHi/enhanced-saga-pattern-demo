@@ -7,7 +7,7 @@ import tw.paulchang.core.entity.warehouse.Warehouse
 @Table(value = "warehouse")
 data class WarehouseModel(
     @Id
-    private val id: Long,
+    val id: Long?,
 
     val productId: Long,
     var amount: Int,
