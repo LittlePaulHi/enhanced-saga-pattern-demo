@@ -17,4 +17,9 @@ class CoreConfiguration {
     fun getProductByIdUseCase(
         productDao: ProductDao
     ) = GetProductByIdUseCase(productDao)
+
+    @Bean
+    fun fetchGoodsFromOrderUseCase(
+        warehouseDao: WarehouseDao
+    ) = FetchGoodsFromOrderUseCase(warehouseDao)
 }
