@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: ${SPRING_PROFILE:local}
+
+---
+spring:
+  r2dbc:
+    url: r2dbc:pool:postgresql://${POSTGRES_WAREHOUSE_URL}/warehouse
+    username: postgres
+    password: ${POSTGRES_WAREHOUSE_PWD}
+    initialization-mode: always
+    pool:
+      initial-size: 10
+      max-size: 30
+      max-idle-time: 30m
+
+logging:
+  level:
+    org.springframework.data.r2dbc: ${LOGGING_LEVEL:DEBUG}
