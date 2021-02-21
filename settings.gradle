@@ -1,3 +1,4 @@
 rootProject.name = 'orchestration-microservices'
 
 include 'core'
+include 'warehouse-service'
