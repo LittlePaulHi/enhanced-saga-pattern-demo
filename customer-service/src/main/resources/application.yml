@@ -1,0 +1,25 @@
+spring:
+  profiles:
+    active: ${SPRING_PROFILE:local}
+
+---
+spring:
+  r2dbc:
+    url: r2dbc:pool:postgresql://${POSTGRES_WAREHOUSE_URL}/customer
+    username: postgres
+    password: ${POSTGRES_WAREHOUSE_PWD}
+    initialization-mode: always
+    pool:
+      initial-size: 10
+      max-size: 30
+      max-idle-time: 30m
+  kafka:
+    producer:
+      bootstrap-servers: ${KAFKA_HOST}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+
+logging:
+  level:
+    org.springframework.data.r2dbc: ${LOGGING_LEVEL:DEBUG}
