@@ -5,9 +5,9 @@ spring:
 ---
 spring:
   r2dbc:
-    url: r2dbc:pool:postgresql://${POSTGRES_WAREHOUSE_URL}/billing
+    url: r2dbc:pool:postgresql://${POSTGRES_BILLING_URL}/billing
     username: postgres
-    password: ${POSTGRES_WAREHOUSE_PWD}
+    password: ${POSTGRES_BILLING_PWD}
     initialization-mode: always
     pool:
       initial-size: 10
