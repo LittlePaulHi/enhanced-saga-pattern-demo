@@ -5,9 +5,9 @@ spring:
 ---
 spring:
   r2dbc:
-    url: r2dbc:pool:postgresql://${POSTGRES_BILLING_URL}/billing
+    url: r2dbc:pool:postgresql://${POSTGRES_SHIPPING_URL}/shipping
     username: postgres
-    password: ${POSTGRES_BILLING_PWD}
+    password: ${POSTGRES_SHIPPING_PWD}
     initialization-mode: always
     pool:
       initial-size: 10
