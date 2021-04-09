@@ -37,7 +37,8 @@ class KafkaProducerController(
                     producerService.sendPurchaseRecordToKafka(
                         PurchaseTopicModel(
                             customerId = purchaseRequestDto.customerId,
-                            purchasedProductsWithAmount = carts.associate { it.productId to it.quantity }
+                            purchasedProductsWithAmount = carts.associate { it.productId to it.quantity },
+                            paymentType = purchaseRequestDto.paymentType,
                         )
                     )
                 } ?: Maybe.empty()
