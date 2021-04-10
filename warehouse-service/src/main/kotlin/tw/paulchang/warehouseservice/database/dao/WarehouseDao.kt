@@ -37,4 +37,20 @@ class WarehouseDao(
                 }
             }
     }
+
+    @Transactional
+    override fun revert(productId: Long, amount: Int): Single<Boolean> {
+        return rxWarehouseRepository.findById(productId)
+            .toSingle()
+            .flatMap {
+                it.amount += amount
+                return@flatMap rxWarehouseRepository.save(it)
+                    .flatMap {
+                        Single.just(true)
+                    }
+                    .doOnError { err: Throwable ->
+                        throw err
+                    }
+            }
+    }
 }
