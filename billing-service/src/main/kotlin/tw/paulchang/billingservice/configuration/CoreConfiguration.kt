@@ -8,6 +8,7 @@ import tw.paulchang.core.usecase.UseCaseExecutorImp
 import tw.paulchang.core.usecase.billing.AddPaymentUseCase
 import tw.paulchang.core.usecase.billing.CreateBillingUseCase
 import tw.paulchang.core.usecase.billing.PaymentPayUseCase
+import tw.paulchang.core.usecase.billing.RevertPayUseCase
 import tw.paulchang.core.usecase.billing.ValidatePaymentUseCase
 
 @Component
@@ -34,4 +35,9 @@ class CoreConfiguration {
     fun paymentPayUseCase(
         paymentDao: PaymentDao
     ) = PaymentPayUseCase(paymentDao)
+
+    @Bean
+    fun revertPayUseCase(
+        paymentDao: PaymentDao
+    ) = RevertPayUseCase(paymentDao)
 }
