@@ -1,4 +1,4 @@
-package tw.paulchang.customerservice.dto
+package tw.paulchang.core.model
 
 data class PurchaseTopicModel(
     val customerId: Long,

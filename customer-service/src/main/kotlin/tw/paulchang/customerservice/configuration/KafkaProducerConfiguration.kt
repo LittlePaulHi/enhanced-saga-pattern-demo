@@ -17,7 +17,7 @@ import org.springframework.kafka.listener.SeekToCurrentErrorHandler
 import org.springframework.kafka.support.ProducerListener
 import org.springframework.kafka.support.serializer.JsonSerializer
 import org.springframework.util.backoff.FixedBackOff
-import tw.paulchang.customerservice.dto.PurchaseTopicModel
+import tw.paulchang.core.model.PurchaseTopicModel
 
 @Configuration
 class KafkaProducerConfiguration {

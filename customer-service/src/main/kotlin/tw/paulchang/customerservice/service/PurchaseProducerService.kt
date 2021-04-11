@@ -6,7 +6,7 @@ import org.springframework.kafka.support.SendResult
 import org.springframework.stereotype.Service
 import org.springframework.util.concurrent.ListenableFuture
 import tw.paulchang.customerservice.configuration.KafkaTopicConfiguration.Companion.PURCHASE_TOPIC
-import tw.paulchang.customerservice.dto.PurchaseTopicModel
+import tw.paulchang.core.model.PurchaseTopicModel
 
 @Service
 class PurchaseProducerService(
