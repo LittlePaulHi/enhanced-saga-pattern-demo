@@ -37,6 +37,7 @@ class KafkaProducerController(
                     producerService.sendPurchaseRecordToKafka(
                         PurchaseTopicModel(
                             customerId = purchaseRequestDto.customerId,
+                            cartIds = purchaseRequestDto.cartIds,
                             purchasedProductsWithAmount = carts.associate { it.productId to it.quantity },
                             paymentType = purchaseRequestDto.paymentType,
                         )
