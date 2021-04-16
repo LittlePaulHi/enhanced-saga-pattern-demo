@@ -19,4 +19,6 @@ spring:
 
 logging:
   level:
-    org.springframework.data.r2dbc: ${LOGGING_LEVEL:DEBUG}
+    org.springframework.r2dbc: ${SPRING_R2DBC_LOGGING_LEVEL:DEBUG}
+    io.r2dbc.postgresql.QUERY: ${POSTGRES_QUERY_LOGGING_LEVEL:DEBUG}
+    io.r2dbc.postgresql.PARAM: ${POSTGRES_PARAM_LOGGING_LEVEL:DEBUG}
