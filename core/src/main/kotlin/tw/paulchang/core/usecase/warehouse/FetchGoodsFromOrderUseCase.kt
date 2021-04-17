@@ -3,23 +3,18 @@ package tw.paulchang.core.usecase.warehouse
 import io.reactivex.rxjava3.core.Single
 import tw.paulchang.core.dto.warehouse.FetchGoodsRequestDto
 import tw.paulchang.core.usecase.UseCase
-import tw.paulchang.core.usecase.exception.NotFoundException
 
 class FetchGoodsFromOrderUseCase(
     private val warehouseRepository: WarehouseRepository
 ) : UseCase<FetchGoodsRequestDto, Boolean> {
     interface WarehouseRepository {
-        fun fetchGoodsByProductId(productId: Long, amount: Int): Single<Boolean>
+        fun fetchGoodsByProductIds(productsWithAmount: Map<String, Int>): Single<Boolean>
     }
 
     override fun execute(request: FetchGoodsRequestDto): Single<Boolean> {
-        return warehouseRepository.fetchGoodsByProductId(request.productId, request.amount)
+        return warehouseRepository.fetchGoodsByProductIds(request.productsWithAmount)
             .onErrorResumeNext {
-                return@onErrorResumeNext if (it is NoSuchElementException) {
-                    Single.error(NotFoundException("Product with id ${request.productId} is not exist!"))
-                } else {
-                    Single.error(it)
-                }
+                Single.error(it)
             }
     }
 }

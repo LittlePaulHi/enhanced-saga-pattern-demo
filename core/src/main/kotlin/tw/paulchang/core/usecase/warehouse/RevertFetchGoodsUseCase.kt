@@ -9,17 +9,13 @@ class RevertFetchGoodsUseCase(
     private val warehouseRepository: WarehouseRepository
 ) : UseCase<FetchGoodsRequestDto, Boolean> {
     interface WarehouseRepository {
-        fun revert(productId: Long, amount: Int): Single<Boolean>
+        fun revert(productsWithAmount: Map<String, Int>): Single<Boolean>
     }
 
     override fun execute(request: FetchGoodsRequestDto): Single<Boolean> {
-        return warehouseRepository.revert(request.productId, request.amount)
+        return warehouseRepository.revert(request.productsWithAmount)
             .onErrorResumeNext {
-                return@onErrorResumeNext if (it is NoSuchElementException) {
-                    Single.error(NotFoundException("Product with id ${request.productId} is not exist!"))
-                } else {
-                    Single.error(it)
-                }
+                Single.error(it)
             }
     }
 }
