@@ -1,5 +1,6 @@
 package tw.paulchang.warehouseservice.database.dao
 
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Maybe
 import org.springframework.stereotype.Component
 import tw.paulchang.core.entity.warehouse.Product
@@ -29,6 +30,13 @@ class ProductDao(
                         it.toProduct()
                     )
                 }
+            }
+    }
+
+    override fun getAllProductsByIds(productIds: List<Long>): Flowable<Product> {
+        return rxProductRepository.findAllById(productIds)
+            .map {
+                it.toProduct()
             }
     }
 }

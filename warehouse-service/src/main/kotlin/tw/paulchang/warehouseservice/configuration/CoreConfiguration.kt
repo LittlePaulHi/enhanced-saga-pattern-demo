@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import tw.paulchang.core.usecase.UseCaseExecutorImp
 import tw.paulchang.core.usecase.warehouse.FetchGoodsFromOrderUseCase
+import tw.paulchang.core.usecase.warehouse.GetAllProductsByIdsUseCase
 import tw.paulchang.core.usecase.warehouse.GetProductByIdUseCase
 import tw.paulchang.core.usecase.warehouse.RevertFetchGoodsUseCase
 import tw.paulchang.warehouseservice.database.dao.ProductDao
@@ -18,6 +19,11 @@ class CoreConfiguration {
     fun getProductByIdUseCase(
         productDao: ProductDao
     ) = GetProductByIdUseCase(productDao)
+
+    @Bean
+    fun getAllProductsByIdUseCase(
+        productDao: ProductDao
+    ) = GetAllProductsByIdsUseCase(productDao)
 
     @Bean
     fun fetchGoodsFromOrderUseCase(
