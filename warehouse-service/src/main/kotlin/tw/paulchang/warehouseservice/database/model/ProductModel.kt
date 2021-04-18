@@ -15,6 +15,7 @@ data class ProductModel(
 
 fun ProductModel.toProduct(): Product {
     return Product(
+        id = this.id,
         title = this.title,
         price = this.price
     )

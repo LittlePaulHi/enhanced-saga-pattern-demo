@@ -12,6 +12,7 @@ import tw.paulchang.core.entity.billing.Payment
 import tw.paulchang.core.usecase.UseCaseExecutor
 import tw.paulchang.core.usecase.billing.AddPaymentUseCase
 import tw.paulchang.core.usecase.billing.PaymentPayUseCase
+import tw.paulchang.core.usecase.billing.RevertPayUseCase
 import tw.paulchang.core.usecase.billing.ValidatePaymentUseCase
 
 @RestController
@@ -20,7 +21,8 @@ class PaymentController(
     private val useCaseExecutor: UseCaseExecutor,
     private val addPaymentUseCase: AddPaymentUseCase,
     private val validatePaymentUseCase: ValidatePaymentUseCase,
-    private val paymentPayUseCase: PaymentPayUseCase
+    private val paymentPayUseCase: PaymentPayUseCase,
+    private val revertPayUseCase: RevertPayUseCase,
 ) {
     @PostMapping("/add")
     fun addPayment(@RequestBody addPaymentRequestDto: AddPaymentRequestDto): Single<Payment> {
@@ -42,6 +44,14 @@ class PaymentController(
     fun pay(@RequestBody paymentPayRequestDto: PaymentPayRequestDto): Single<Payment> {
         return useCaseExecutor(
             useCase = paymentPayUseCase,
+            request = paymentPayRequestDto
+        )
+    }
+
+    @PostMapping("/revert/pay")
+    fun revertPay(@RequestBody paymentPayRequestDto: PaymentPayRequestDto): Single<Payment> {
+        return useCaseExecutor(
+            useCase = revertPayUseCase,
             request = paymentPayRequestDto
         )
     }

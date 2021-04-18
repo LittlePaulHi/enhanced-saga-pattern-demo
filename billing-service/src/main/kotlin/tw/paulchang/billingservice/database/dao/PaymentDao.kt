@@ -2,6 +2,7 @@ package tw.paulchang.billingservice.database.dao
 
 import io.reactivex.rxjava3.core.Single
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import tw.paulchang.billingservice.database.model.PaymentModel
 import tw.paulchang.billingservice.database.model.toPayment
 import tw.paulchang.billingservice.database.repository.RxPaymentRepository
@@ -13,6 +14,7 @@ import java.time.Instant
 class PaymentDao(
     private val rxPaymentRepository: RxPaymentRepository
 ) : PaymentRepository {
+    @Transactional
     override fun addPayment(
         customerId: Long,
         paymentType: String,
@@ -32,6 +34,7 @@ class PaymentDao(
             }
     }
 
+    @Transactional
     override fun validate(
         customerId: Long,
         paymentType: String,
@@ -48,6 +51,7 @@ class PaymentDao(
             }
     }
 
+    @Transactional
     override fun pay(
         customerId: Long,
         paymentType: String,
@@ -61,6 +65,24 @@ class PaymentDao(
             .toSingle()
             .flatMap {
                 it.balance -= amount
+                it.updatedAt = Instant.now()
+                return@flatMap rxPaymentRepository.save(it)
+            }
+            .flatMap {
+                Single.just(it.toPayment())
+            }
+    }
+
+    @Transactional
+    override fun revert(customerId: Long, paymentType: String, amount: Int): Single<Payment> {
+        return rxPaymentRepository
+            .findByCustomerIdAndPaymentType(
+                customerId = customerId,
+                paymentType = paymentType.toUpperCase(),
+            )
+            .toSingle()
+            .flatMap {
+                it.balance += amount
                 it.updatedAt = Instant.now()
                 return@flatMap rxPaymentRepository.save(it)
             }

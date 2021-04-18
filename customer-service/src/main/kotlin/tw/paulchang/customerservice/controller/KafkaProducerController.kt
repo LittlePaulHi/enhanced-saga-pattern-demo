@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import tw.paulchang.core.dto.customer.PurchaseRequestDto
+import tw.paulchang.core.model.PurchaseTopicModel
 import tw.paulchang.customerservice.database.dao.CartDao
 import tw.paulchang.customerservice.database.model.CartModel
-import tw.paulchang.customerservice.dto.PurchaseTopicModel
 import tw.paulchang.customerservice.service.PurchaseProducerService
 import java.util.concurrent.Executors
 
@@ -37,8 +37,10 @@ class KafkaProducerController(
                     producerService.sendPurchaseRecordToKafka(
                         PurchaseTopicModel(
                             customerId = purchaseRequestDto.customerId,
+                            cartIds = purchaseRequestDto.cartIds,
                             purchasedProductsWithAmount = carts.associate { it.productId to it.quantity },
                             paymentType = purchaseRequestDto.paymentType,
+                            shippingType = purchaseRequestDto.shippingType
                         )
                     )
                 } ?: Maybe.empty()
