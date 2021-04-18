@@ -4,5 +4,6 @@ data class PurchaseTopicModel(
     val customerId: Long,
     val cartIds: List<Long>,
     val purchasedProductsWithAmount: Map<Long, Int>,
-    val paymentType: String
+    val paymentType: String,
+    val shippingType: String,
 )
