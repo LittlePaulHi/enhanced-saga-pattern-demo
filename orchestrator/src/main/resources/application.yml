@@ -1,0 +1,29 @@
+spring:
+  profiles:
+    active: ${SPRING_PROFILE:local}
+
+server:
+  port: ${ORCHESTATOR_PORT:8090}
+
+---
+spring:
+  kafka:
+    consumer:
+      bootstrap-servers: ${KAFKA_HOST}
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+logging:
+  level:
+    org.springframework.r2dbc: ${SPRING_R2DBC_LOGGING_LEVEL:DEBUG}
+    io.r2dbc.postgresql.QUERY: ${POSTGRES_QUERY_LOGGING_LEVEL:DEBUG}
+    io.r2dbc.postgresql.PARAM: ${POSTGRES_PARAM_LOGGING_LEVEL:DEBUG}
+
+---
+service:
+  endpoints:
+    order: ${ORDER_ENDPOINT:http://localhost:8081}
+    warehouse: ${WAREHOUSE_ENDPOINT:http://localhost:8082}
+    billing: ${BILLING_ENDPOINT:http://localhost:8083}
+    shipping: ${SHIPPING_ENDPOINT:http://localhost:8084}
