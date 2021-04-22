@@ -16,6 +16,13 @@ spring:
       initial-size: 10
       max-size: 30
       max-idle-time: 30m
+  data:
+    redis:
+      repositories:
+        enabled: true
+  redis:
+    host: ${BILLING_REDIS_HOST}
+    port: ${BILLING_REDIS_PORT}
 
 logging:
   level:
