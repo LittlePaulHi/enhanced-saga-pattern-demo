@@ -9,6 +9,7 @@ import tw.paulchang.core.usecase.warehouse.GetProductByIdUseCase
 import tw.paulchang.core.usecase.warehouse.RevertFetchGoodsUseCase
 import tw.paulchang.warehouseservice.database.dao.ProductDao
 import tw.paulchang.warehouseservice.database.dao.WarehouseDao
+import tw.paulchang.warehouseservice.redis.dao.WarehouseCacheDao
 
 @Configuration
 class CoreConfiguration {
@@ -31,7 +32,17 @@ class CoreConfiguration {
     ) = FetchGoodsFromOrderUseCase(warehouseDao)
 
     @Bean
-    fun revertFetchGoofsUseCase(
+    fun fetchGoodsFromOrderCacheUseCase(
+        warehouseCacheDao: WarehouseCacheDao
+    ) = FetchGoodsFromOrderUseCase(warehouseCacheDao)
+
+    @Bean
+    fun revertFetchGoodsUseCase(
         warehouseDao: WarehouseDao
     ) = RevertFetchGoodsUseCase(warehouseDao)
+
+    @Bean
+    fun revertFetchGoodsCacheUseCase(
+        warehouseCacheDao: WarehouseCacheDao
+    ) = RevertFetchGoodsUseCase(warehouseCacheDao)
 }
