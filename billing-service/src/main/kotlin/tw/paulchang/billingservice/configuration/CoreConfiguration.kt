@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 import tw.paulchang.billingservice.database.dao.BillingDao
 import tw.paulchang.billingservice.database.dao.PaymentDao
+import tw.paulchang.billingservice.redis.dao.PaymentCacheDao
 import tw.paulchang.core.usecase.UseCaseExecutorImp
 import tw.paulchang.core.usecase.billing.AddPaymentUseCase
 import tw.paulchang.core.usecase.billing.CreateBillingUseCase
@@ -32,12 +33,27 @@ class CoreConfiguration {
     ) = ValidatePaymentUseCase(paymentDao)
 
     @Bean
+    fun validatePaymentCacheUseCase(
+        paymentCacheDao: PaymentCacheDao
+    ) = ValidatePaymentUseCase(paymentCacheDao)
+
+    @Bean
     fun paymentPayUseCase(
         paymentDao: PaymentDao
     ) = PaymentPayUseCase(paymentDao)
 
     @Bean
+    fun paymentPayCacheUseCase(
+        paymentCacheDao: PaymentCacheDao
+    ) = PaymentPayUseCase(paymentCacheDao)
+
+    @Bean
     fun revertPayUseCase(
         paymentDao: PaymentDao
     ) = RevertPayUseCase(paymentDao)
+
+    @Bean
+    fun revertPayCacheUseCase(
+        paymentCacheDao: PaymentCacheDao
+    ) = RevertPayUseCase(paymentCacheDao)
 }
