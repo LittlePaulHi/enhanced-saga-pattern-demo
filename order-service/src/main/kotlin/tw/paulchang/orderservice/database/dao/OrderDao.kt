@@ -45,7 +45,7 @@ class OrderDao(
                 it.shippingId = shippingId
                 it.amount = amount
                 it.orderStatus = orderStatus
-                it.shippedAt = Instant.now()
+                it.shippedAt = if (orderStatus != "FAILED") Instant.now() else null
                 return@flatMap rxOrderRepository.save(it)
             }
             .flatMap {
