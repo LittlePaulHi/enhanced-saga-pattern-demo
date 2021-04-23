@@ -16,6 +16,13 @@ spring:
       initial-size: 10
       max-size: 30
       max-idle-time: 30m
+  data:
+    redis:
+      repositories:
+        enabled: true
+  redis:
+    host: ${WAREHOUSE_REDIS_HOST}
+    port: ${WAREHOUSE_REDIS_PORT}
 
 logging:
   level:
