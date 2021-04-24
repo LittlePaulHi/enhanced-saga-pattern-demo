@@ -8,6 +8,10 @@ server:
 ---
 spring:
   kafka:
+    producer:
+      bootstrap-servers: ${KAFKA_HOST}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
       bootstrap-servers: ${KAFKA_HOST}
       auto-offset-reset: latest
