@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.config.TopicBuilder
 import org.springframework.kafka.core.KafkaAdmin
+import tw.paulchang.core.model.KafkaTopics
 
 @Configuration
 class KafkaTopicConfiguration {
@@ -23,10 +24,6 @@ class KafkaTopicConfiguration {
 
     @Bean
     fun newTopic(): NewTopic {
-        return TopicBuilder.name(PURCHASE_TOPIC).partitions(5).build()
-    }
-
-    companion object {
-        const val PURCHASE_TOPIC = "purchase"
+        return TopicBuilder.name(KafkaTopics.PURCHASE).partitions(5).build()
     }
 }

@@ -5,8 +5,8 @@ import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.SendResult
 import org.springframework.stereotype.Service
 import org.springframework.util.concurrent.ListenableFuture
+import tw.paulchang.core.model.KafkaTopics
 import tw.paulchang.core.model.PurchaseTopicModel
-import tw.paulchang.customerservice.configuration.KafkaTopicConfiguration.Companion.PURCHASE_TOPIC
 
 @Service
 class PurchaseProducerService(
@@ -16,7 +16,7 @@ class PurchaseProducerService(
         purchaseTopicModel: PurchaseTopicModel
     ): Maybe<ListenableFuture<SendResult<String, PurchaseTopicModel>>> {
         return Maybe.just(
-            kafkaTemplate.send(PURCHASE_TOPIC, purchaseTopicModel)
+            kafkaTemplate.send(KafkaTopics.PURCHASE, purchaseTopicModel)
         )
     }
 }
