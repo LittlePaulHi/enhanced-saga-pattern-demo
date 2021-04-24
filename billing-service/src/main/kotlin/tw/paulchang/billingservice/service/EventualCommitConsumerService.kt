@@ -14,7 +14,7 @@ class EventualCommitConsumerService(
 
     @KafkaListener(topics = [KafkaTopics.FINISHED_BUY_EVENT], groupId = "billing-sync-service", containerFactory = "concurrentConsumerListener")
     fun consumer(message: FinishedBuyEventTopicModel) {
-        logger.info { "Consumed message -> $message" }
+        logger.info { "[Eventual Commit] Consumed message -> $message" }
 
         paymentDao.pay(
             customerId = message.customerId,
