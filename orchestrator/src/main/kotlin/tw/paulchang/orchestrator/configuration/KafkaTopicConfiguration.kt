@@ -1,4 +1,4 @@
-package tw.paulchang.customerservice.configuration
+package tw.paulchang.orchestrator.configuration
 
 import org.apache.kafka.clients.admin.AdminClientConfig
 import org.apache.kafka.clients.admin.NewTopic
@@ -24,6 +24,6 @@ class KafkaTopicConfiguration {
 
     @Bean
     fun newTopic(): NewTopic {
-        return TopicBuilder.name(KafkaTopics.PURCHASE).partitions(5).build()
+        return TopicBuilder.name(KafkaTopics.FINISHED_BUY_EVENT).partitions(5).build()
     }
 }

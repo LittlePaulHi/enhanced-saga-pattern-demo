@@ -23,6 +23,12 @@ spring:
   redis:
     host: ${WAREHOUSE_REDIS_HOST}
     port: ${WAREHOUSE_REDIS_PORT}
+  kafka:
+    consumer:
+      bootstrap-servers: ${KAFKA_HOST}
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
 logging:
   level:
