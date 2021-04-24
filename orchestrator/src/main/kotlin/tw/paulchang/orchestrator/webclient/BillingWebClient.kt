@@ -4,9 +4,11 @@ import io.reactivex.rxjava3.core.Single
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.adapter.rxjava.RxJava3Adapter
+import reactor.core.publisher.Mono
 import tw.paulchang.core.dto.billing.CreateBillingRequestDto
 import tw.paulchang.core.dto.billing.PaymentPayRequestDto
 import tw.paulchang.core.dto.billing.ValidatePaymentRequestDto
@@ -47,11 +49,14 @@ class BillingWebClient(
                 .post()
                 .uri("/payment/validate")
                 .body(BodyInserters.fromValue(validatePaymentRequestDto))
-                .retrieve()
-                .bodyToMono<Boolean>()
-                .doOnNext { resp ->
-                    stepStatus =
-                        if (resp != null) WorkflowStepStatus.COMPLETE else WorkflowStepStatus.FAILED
+                .exchangeToMono { clientResponse: ClientResponse ->
+                    return@exchangeToMono if (clientResponse.statusCode().isError) {
+                        stepStatus = WorkflowStepStatus.FAILED
+                        Mono.just(false)
+                    } else {
+                        stepStatus = WorkflowStepStatus.COMPLETE
+                        clientResponse.bodyToMono(Boolean::class.java)
+                    }
                 }
                 .doOnError {
                     stepStatus = WorkflowStepStatus.FAILED
