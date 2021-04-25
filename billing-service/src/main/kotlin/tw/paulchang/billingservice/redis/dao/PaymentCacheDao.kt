@@ -1,6 +1,7 @@
 package tw.paulchang.billingservice.redis.dao
 
 import io.reactivex.rxjava3.core.Single
+import org.springframework.data.jpa.repository.Lock
 import org.springframework.stereotype.Component
 import tw.paulchang.billingservice.database.model.PaymentModel
 import tw.paulchang.billingservice.database.repository.RxPaymentRepository
@@ -12,6 +13,7 @@ import tw.paulchang.core.usecase.billing.PaymentPayUseCase
 import tw.paulchang.core.usecase.billing.RevertPayUseCase
 import tw.paulchang.core.usecase.billing.ValidatePaymentUseCase
 import java.time.Instant
+import javax.persistence.LockModeType
 
 @Component
 class PaymentCacheDao(
@@ -56,6 +58,7 @@ class PaymentCacheDao(
             }
     }
 
+    @Lock(LockModeType.WRITE)
     override fun pay(
         customerId: Long,
         paymentType: String,
@@ -77,6 +80,7 @@ class PaymentCacheDao(
             }
     }
 
+    @Lock(LockModeType.WRITE)
     override fun revert(customerId: Long, paymentType: String, amount: Int): Single<Payment> {
         return Single.just(
             paymentCacheRepository
