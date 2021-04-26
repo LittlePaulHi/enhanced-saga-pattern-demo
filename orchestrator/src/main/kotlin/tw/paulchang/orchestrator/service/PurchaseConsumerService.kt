@@ -17,6 +17,7 @@ import tw.paulchang.core.dto.warehouse.GetAllProductsByIdsRequestDto
 import tw.paulchang.core.entity.order.Order
 import tw.paulchang.core.entity.shipping.Shipping
 import tw.paulchang.core.entity.warehouse.Product
+import tw.paulchang.core.model.KafkaTopics
 import tw.paulchang.core.model.PurchaseTopicModel
 import tw.paulchang.orchestrator.webclient.BillingWebClient
 import tw.paulchang.orchestrator.webclient.OrderWebClient
@@ -33,7 +34,11 @@ class PurchaseConsumerService(
     private val shippingWebClient: ShippingWebClient,
 ) {
 
-    @KafkaListener(topics = ["purchase"], groupId = "orchestrator-baseline", containerFactory = "concurrentConsumerListener")
+    @KafkaListener(
+        topics = [KafkaTopics.PURCHASE],
+        groupId = "orchestrator-baseline",
+        containerFactory = "concurrentConsumerListener"
+    )
     fun consumer(message: PurchaseTopicModel) {
         logger.info { "Consumed message -> $message" }
 
