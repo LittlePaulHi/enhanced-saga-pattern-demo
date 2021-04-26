@@ -1,6 +1,8 @@
 package tw.paulchang.billingservice.redis.dao
 
 import io.reactivex.rxjava3.core.Single
+import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.event.EventListener
 import org.springframework.data.jpa.repository.Lock
 import org.springframework.stereotype.Component
 import tw.paulchang.billingservice.database.model.PaymentModel
@@ -22,10 +24,13 @@ class PaymentCacheDao(
 ) : ValidatePaymentUseCase.PaymentRepository,
     PaymentPayUseCase.PaymentRepository,
     RevertPayUseCase.PaymentRepository {
+
+    @EventListener(ApplicationReadyEvent::class)
     fun initPaymentCache(): Single<MutableIterable<PaymentCacheModel>> {
         return rxPaymentRepository.findAll()
             .toList()
             .flatMap { paymentModelList: MutableList<PaymentModel> ->
+                paymentCacheRepository.deleteAll()
                 Single.just(
                     paymentCacheRepository.saveAll(
                         paymentModelList.map { paymentModel: PaymentModel ->
