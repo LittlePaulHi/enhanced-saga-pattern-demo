@@ -3,20 +3,20 @@ package tw.paulchang.billingservice.service
 import mu.KLogging
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Service
-import tw.paulchang.billingservice.database.dao.PaymentDao
+import tw.paulchang.billingservice.redis.dao.PaymentCacheDao
 import tw.paulchang.core.model.FinishedBuyEventTopicModel
 import tw.paulchang.core.model.KafkaTopics
 
 @Service
-class EventualCommitConsumerService(
-    private val paymentDao: PaymentDao
+class CompensateConsumerService(
+    private val paymentCacheDao: PaymentCacheDao
 ) {
 
-    @KafkaListener(topics = [KafkaTopics.FINISHED_BUY_EVENT], groupId = "billing-sync-service", containerFactory = "concurrentConsumerListener")
+    @KafkaListener(topics = [KafkaTopics.COMPENSATE_PAYMENT], groupId = "billing-compensate-service", containerFactory = "concurrentConsumerListener")
     fun consumer(message: FinishedBuyEventTopicModel) {
-        logger.info { "[Eventual Commit] Consumed message -> $message" }
+        logger.info { "[Compensate] Consumed message -> $message" }
 
-        paymentDao.pay(
+        paymentCacheDao.revert(
             customerId = message.customerId,
             paymentType = message.paymentType,
             amount = message.amount

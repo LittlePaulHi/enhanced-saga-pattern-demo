@@ -2,6 +2,7 @@ package tw.paulchang.warehouseservice.redis.dao
 
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
+import org.springframework.data.jpa.repository.Lock
 import org.springframework.stereotype.Component
 import tw.paulchang.core.usecase.warehouse.FetchGoodsFromOrderUseCase
 import tw.paulchang.core.usecase.warehouse.RevertFetchGoodsUseCase
@@ -9,6 +10,7 @@ import tw.paulchang.warehouseservice.database.model.WarehouseModel
 import tw.paulchang.warehouseservice.database.repository.RxWarehouseRepository
 import tw.paulchang.warehouseservice.redis.model.WarehouseCacheModel
 import tw.paulchang.warehouseservice.redis.repository.WarehouseCacheRepository
+import javax.persistence.LockModeType
 
 @Component
 class WarehouseCacheDao(
@@ -34,6 +36,7 @@ class WarehouseCacheDao(
             }
     }
 
+    @Lock(LockModeType.WRITE)
     override fun fetchGoodsByProductIds(productsWithAmount: Map<String, Int>): Single<Boolean> {
         return Flowable.fromIterable(
             productsWithAmount.map {
@@ -64,6 +67,7 @@ class WarehouseCacheDao(
             }
     }
 
+    @Lock(LockModeType.WRITE)
     override fun revert(productsWithAmount: Map<String, Int>): Single<Boolean> {
         return Flowable.fromIterable(
             productsWithAmount.map {
