@@ -2,6 +2,8 @@ package tw.paulchang.warehouseservice.redis.dao
 
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
+import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.event.EventListener
 import org.springframework.data.jpa.repository.Lock
 import org.springframework.stereotype.Component
 import tw.paulchang.core.usecase.warehouse.FetchGoodsFromOrderUseCase
@@ -18,10 +20,13 @@ class WarehouseCacheDao(
     private val warehouseCacheRepository: WarehouseCacheRepository
 ) : FetchGoodsFromOrderUseCase.WarehouseRepository,
     RevertFetchGoodsUseCase.WarehouseRepository {
+
+    @EventListener(ApplicationReadyEvent::class)
     fun initWarehouseCache(): Single<MutableIterable<WarehouseCacheModel>> {
         return rxWarehouseRepository.findAll()
             .toList()
             .flatMap { warehouseModelList: MutableList<WarehouseModel> ->
+                warehouseCacheRepository.deleteAll()
                 Single.just(
                     warehouseCacheRepository.saveAll(
                         warehouseModelList.map { warehouseModel: WarehouseModel ->

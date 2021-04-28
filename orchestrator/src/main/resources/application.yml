@@ -29,5 +29,7 @@ service:
   endpoints:
     order: ${ORDER_ENDPOINT:http://localhost:8081}
     warehouse: ${WAREHOUSE_ENDPOINT:http://localhost:8082}
+    warehouse-quota-cache: ${WAREHOUSE_QUOTA_CACHE_ENDPOINT:http://localhost:8082}
     billing: ${BILLING_ENDPOINT:http://localhost:8083}
+    billing-quota-cache: ${BILLING_QUOTA_CACHE_ENDPOINT:http://localhost:8083}
     shipping: ${SHIPPING_ENDPOINT:http://localhost:8084}
