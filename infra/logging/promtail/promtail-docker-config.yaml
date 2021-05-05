@@ -1,0 +1,67 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: ${LOKI_URL}/loki/api/v1/push
+
+scrape_configs:
+  - job_name: warehouse-service
+    pipeline_stages:
+      - json:
+          expressions:
+            level: level
+      - labels:
+          level:
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: warehouse-service
+          host: mbp13
+          __path__: /var/log/thesis/warehouse-service/*.log
+  - job_name: billing-service
+    pipeline_stages:
+      - json:
+          expressions:
+            level: level
+      - labels:
+          level:
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: billing-service
+          host: mbp13
+          __path__: /var/log/thesis/billing-service/*.log
+  - job_name: order-service
+    pipeline_stages:
+      - json:
+          expressions:
+            level: level
+      - labels:
+          level:
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: order-service
+          host: mbp13
+          __path__: /var/log/thesis/order-service/*.log
+  - job_name: shipping-service
+    pipeline_stages:
+      - json:
+          expressions:
+            level: level
+      - labels:
+          level:
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: shipping-service
+          host: mbp13
+          __path__: /var/log/thesis/shipping-service/*.log
