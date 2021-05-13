@@ -6,7 +6,6 @@ import mu.KLogging
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener
 import org.springframework.data.jpa.repository.Lock
-import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory
 import org.springframework.data.redis.core.ReactiveRedisOperations
 import org.springframework.stereotype.Component
 import reactor.adapter.rxjava.RxJava3Adapter
@@ -22,7 +21,6 @@ import javax.persistence.LockModeType
 @Component
 class WarehouseCacheDao(
     private val rxWarehouseRepository: RxWarehouseRepository,
-    private val reactiveRedisConnectionFactory: ReactiveRedisConnectionFactory,
     private val warehouseReactiveRedisOperations: ReactiveRedisOperations<String, WarehouseCacheModel>,
 ) : FetchGoodsFromOrderUseCase.WarehouseRepository,
     RevertFetchGoodsUseCase.WarehouseRepository {
@@ -33,25 +31,23 @@ class WarehouseCacheDao(
             .toList()
             .flatMapCompletable { warehouseModelList: MutableList<WarehouseModel> ->
                 RxJava3Adapter.fluxToFlowable(
-                    reactiveRedisConnectionFactory.reactiveConnection.serverCommands().flushAll().thenMany(
-                        Flux.fromIterable(warehouseModelList)
-                            .map { warehouseModel: WarehouseModel ->
-                                WarehouseCacheModel(
-                                    id = UUID.nameUUIDFromBytes(
-                                        warehouseModel.productId.toString().toByteArray()
-                                    ).toString(),
-                                    productId = warehouseModel.productId,
-                                    amount = warehouseModel.amount,
-                                    isInStock = warehouseModel.isInStock,
-                                )
-                            }
-                            .flatMap { warehouseCacheModel: WarehouseCacheModel ->
-                                warehouseReactiveRedisOperations.opsForValue().set(
-                                    warehouseCacheModel.id,
-                                    warehouseCacheModel
-                                )
-                            }
-                    )
+                    Flux.fromIterable(warehouseModelList)
+                        .map { warehouseModel: WarehouseModel ->
+                            WarehouseCacheModel(
+                                id = UUID.nameUUIDFromBytes(
+                                    warehouseModel.productId.toString().toByteArray()
+                                ).toString(),
+                                productId = warehouseModel.productId,
+                                amount = warehouseModel.amount,
+                                isInStock = warehouseModel.isInStock,
+                            )
+                        }
+                        .flatMap { warehouseCacheModel: WarehouseCacheModel ->
+                            warehouseReactiveRedisOperations.opsForValue().set(
+                                warehouseCacheModel.id,
+                                warehouseCacheModel
+                            )
+                        }
                 )
                     .ignoreElements()
             }
