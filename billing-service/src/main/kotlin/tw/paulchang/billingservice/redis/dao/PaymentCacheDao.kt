@@ -2,6 +2,7 @@ package tw.paulchang.billingservice.redis.dao
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
+import mu.KLogging
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener
 import org.springframework.data.jpa.repository.Lock
@@ -66,6 +67,7 @@ class PaymentCacheDao(
         paymentType: String,
         amount: Int
     ): Single<Boolean> {
+        logger.info { "billing-service-quota-cache: validating $paymentType payment with amount $$amount" }
         return RxJava3Adapter.monoToSingle(
             paymentReactiveRedisOperations.opsForValue().get(
                 UUID.nameUUIDFromBytes(
@@ -85,6 +87,7 @@ class PaymentCacheDao(
         paymentType: String,
         amount: Int
     ): Single<Payment> {
+        logger.info { "billing-service-quota-cache: $paymentType payment paid $$amount" }
         return RxJava3Adapter.monoToSingle(
             paymentReactiveRedisOperations.opsForValue().get(
                 UUID.nameUUIDFromBytes(
@@ -113,6 +116,7 @@ class PaymentCacheDao(
 
     @Lock(LockModeType.WRITE)
     override fun revert(customerId: Long, paymentType: String, amount: Int): Single<Payment> {
+        logger.info { "billing-service-quota-cache: compensate $paymentType payment (amount=$$amount) to customer-$customerId" }
         return RxJava3Adapter.monoToSingle(
             paymentReactiveRedisOperations.opsForValue().get(
                 UUID.nameUUIDFromBytes(
@@ -138,4 +142,6 @@ class PaymentCacheDao(
                     }
             }
     }
+
+    companion object : KLogging()
 }

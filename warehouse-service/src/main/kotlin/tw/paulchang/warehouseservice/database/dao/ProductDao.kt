@@ -2,6 +2,7 @@ package tw.paulchang.warehouseservice.database.dao
 
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Maybe
+import mu.KLogging
 import org.springframework.stereotype.Component
 import tw.paulchang.core.entity.warehouse.Product
 import tw.paulchang.core.usecase.repository.ProductRepository
@@ -13,6 +14,7 @@ import tw.paulchang.warehouseservice.database.repository.RxProductRepository
 class ProductDao(
     private val rxProductRepository: RxProductRepository
 ) : ProductRepository {
+
     override fun getByProductId(productId: Long): Maybe<Product> {
         return rxProductRepository.findById(productId)
             .defaultIfEmpty(
@@ -34,9 +36,12 @@ class ProductDao(
     }
 
     override fun getAllProductsByIds(productIds: List<Long>): Flowable<Product> {
+        logger.info { "warehouse-service: get all products by IDs($productIds)" }
         return rxProductRepository.findAllById(productIds)
             .map {
                 it.toProduct()
             }
     }
+
+    companion object : KLogging()
 }

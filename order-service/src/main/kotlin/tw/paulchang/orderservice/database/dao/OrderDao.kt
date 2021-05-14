@@ -1,6 +1,7 @@
 package tw.paulchang.orderservice.database.dao
 
 import io.reactivex.rxjava3.core.Single
+import mu.KLogging
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import tw.paulchang.core.entity.order.Order
@@ -20,6 +21,7 @@ class OrderDao(
 
     @Transactional
     override fun initOrder(customerId: Long, cartIds: List<Long>): Single<Order> {
+        logger.info { "order-service: init order for customer-$customerId" }
         return rxOrderRepository.save(
             OrderModel(
                 id = null,
@@ -39,6 +41,7 @@ class OrderDao(
 
     @Transactional
     override fun placeOrder(orderId: Long, shippingId: Long, amount: Int, orderStatus: String): Single<Order> {
+        logger.info { "order-service: complete order on order-$orderId (shippingId=$shippingId, amount=$$amount, status=$orderStatus)" }
         return rxOrderRepository.findById(orderId)
             .toSingle()
             .flatMap {
@@ -52,4 +55,6 @@ class OrderDao(
                 Single.just(it.toOrder())
             }
     }
+
+    companion object : KLogging()
 }

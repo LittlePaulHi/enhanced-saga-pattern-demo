@@ -55,6 +55,7 @@ class WarehouseCacheDao(
 
     @Lock(LockModeType.WRITE)
     override fun fetchGoodsByProductIds(productsWithAmount: Map<String, Int>): Single<Boolean> {
+        logger.info { "warehouse-service-quota-cache: fetch goods by $productsWithAmount" }
         return RxJava3Adapter.monoToSingle(
             warehouseReactiveRedisOperations.opsForValue().multiGet(
                 productsWithAmount.map {
@@ -89,6 +90,7 @@ class WarehouseCacheDao(
 
     @Lock(LockModeType.WRITE)
     override fun revert(productsWithAmount: Map<String, Int>): Single<Boolean> {
+        logger.info { "warehouse-service-quota-cache: compensate fetched goods by $productsWithAmount" }
         return RxJava3Adapter.monoToSingle(
             warehouseReactiveRedisOperations.opsForValue().multiGet(
                 productsWithAmount.map {
@@ -116,4 +118,6 @@ class WarehouseCacheDao(
                 )
             }
     }
+
+    companion object : KLogging()
 }

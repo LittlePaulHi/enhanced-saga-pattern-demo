@@ -1,6 +1,7 @@
 package tw.paulchang.shippingservice.database.dao
 
 import io.reactivex.rxjava3.core.Single
+import mu.KLogging
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import tw.paulchang.core.entity.shipping.Shipping
@@ -16,6 +17,7 @@ class ShippingDao(
 ) : ShippingRepository {
     @Transactional
     override fun dispatch(orderId: Long, shippingType: String): Single<Shipping> {
+        logger.info { "shipping-service: dispatch the delivery for order-$orderId (shipping-type=$shippingType)" }
         return rxShippingRepository.save(
             ShippingModel(
                 id = null,
@@ -28,4 +30,6 @@ class ShippingDao(
                 Single.just(it.toShipping())
             }
     }
+
+    companion object : KLogging()
 }
