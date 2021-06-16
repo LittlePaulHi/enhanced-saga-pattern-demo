@@ -1,6 +1,7 @@
 package tw.paulchang.billingservice.database.dao
 
 import io.reactivex.rxjava3.core.Single
+import mu.KLogging
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import tw.paulchang.billingservice.database.model.BillingModel
@@ -22,6 +23,7 @@ class BillingDao(
         status: String,
         paidAt: Instant
     ): Single<Billing> {
+        logger.info { "billing-service: create billing for customer-$customerId to order-$orderId" }
         return rxBillingRepository.save(
             BillingModel(
                 id = null,
@@ -36,4 +38,6 @@ class BillingDao(
                 Single.just(it.toBilling())
             }
     }
+
+    companion object : KLogging()
 }

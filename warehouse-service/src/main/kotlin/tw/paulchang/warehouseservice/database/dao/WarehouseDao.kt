@@ -1,6 +1,7 @@
 package tw.paulchang.warehouseservice.database.dao
 
 import io.reactivex.rxjava3.core.Single
+import mu.KLogging
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import tw.paulchang.core.usecase.repository.WarehouseRepository
@@ -12,6 +13,7 @@ class WarehouseDao(
 ) : WarehouseRepository {
     @Transactional
     override fun fetchGoodsByProductIds(productsWithAmount: Map<String, Int>): Single<Boolean> {
+        logger.info { "warehouse-service: fetch goods by $productsWithAmount" }
         return rxWarehouseRepository.findAllByProductIdIn(
             productsWithAmount.map { it.key.toLong() }
         )
@@ -40,6 +42,7 @@ class WarehouseDao(
 
     @Transactional
     override fun revert(productsWithAmount: Map<String, Int>): Single<Boolean> {
+        logger.info { "warehouse-service: [ROLLBACK] revert fetched goods by $productsWithAmount" }
         return rxWarehouseRepository.findAllByProductIdIn(
             productsWithAmount.map { it.key.toLong() }
         )
@@ -61,4 +64,6 @@ class WarehouseDao(
                     }
             }
     }
+
+    companion object : KLogging()
 }

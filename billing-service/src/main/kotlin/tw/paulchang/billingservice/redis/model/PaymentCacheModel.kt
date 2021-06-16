@@ -1,21 +1,23 @@
 package tw.paulchang.billingservice.redis.model
 
-import org.springframework.data.annotation.Id
-import org.springframework.data.redis.core.RedisHash
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.springframework.data.redis.core.index.Indexed
 import tw.paulchang.core.entity.billing.Payment
 import java.time.Instant
 
-@RedisHash("payment")
 data class PaymentCacheModel(
-    @Indexed val customerId: Long,
-    @Indexed val paymentType: String,
-    var balance: Int,
+    @JsonProperty("id") @Indexed val id: String,
+    @JsonProperty("customerId") @Indexed val customerId: Long,
+    @JsonProperty("paymentType") @Indexed val paymentType: String,
+    @JsonProperty("balance") var balance: Int,
+
+    @JsonProperty("updatedAt")
+    @JsonSerialize(using = InstantJsonSerializer::class)
+    @JsonDeserialize(using = InstantJsonDeserializer::class)
     var updatedAt: Instant,
-) {
-    @get:Id
-    var id: String? = null
-}
+)
 
 fun PaymentCacheModel.toPayment(): Payment {
     return Payment(

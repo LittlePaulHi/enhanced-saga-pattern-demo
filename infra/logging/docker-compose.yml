@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  promtail:
+    image: grafana/promtail:2.1.0
+    container_name: promtail
+    restart: unless-stopped
+    volumes:
+      - ./promtail/promtail-docker-config.yaml:/etc/promtail/docker-config.yaml
+      - ../../logs/warehouse-service:/var/log/thesis/warehouse-service
+      - ../../logs/billing-service:/var/log/thesis/billing-service
+      - ../../logs/order-service:/var/log/thesis/order-service
+      - ../../logs/shipping-service:/var/log/thesis/shipping-service
+    command:
+      - -config.expand-env=true
+      - -config.file=/etc/promtail/docker-config.yaml
+    environment:
+      LOKI_URL: ${LOKI_URL}

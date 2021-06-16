@@ -1,6 +1,7 @@
 package tw.paulchang.billingservice.database.dao
 
 import io.reactivex.rxjava3.core.Single
+import mu.KLogging
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import tw.paulchang.billingservice.database.model.PaymentModel
@@ -40,6 +41,7 @@ class PaymentDao(
         paymentType: String,
         amount: Int
     ): Single<Boolean> {
+        logger.info { "billing-service: validating $paymentType payment with amount $$amount" }
         return rxPaymentRepository
             .findByCustomerIdAndPaymentType(
                 customerId = customerId,
@@ -57,6 +59,7 @@ class PaymentDao(
         paymentType: String,
         amount: Int
     ): Single<Payment> {
+        logger.info { "billing-service: $paymentType payment paid $$amount" }
         return rxPaymentRepository
             .findByCustomerIdAndPaymentType(
                 customerId = customerId,
@@ -75,6 +78,7 @@ class PaymentDao(
 
     @Transactional
     override fun revert(customerId: Long, paymentType: String, amount: Int): Single<Payment> {
+        logger.info { "billing-service: [ROLLBACK] revert $paymentType payment transaction (amount=$$amount) to customer-$customerId" }
         return rxPaymentRepository
             .findByCustomerIdAndPaymentType(
                 customerId = customerId,
@@ -90,4 +94,6 @@ class PaymentDao(
                 Single.just(it.toPayment())
             }
     }
+
+    companion object : KLogging()
 }
